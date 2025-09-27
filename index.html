@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบจองห้อง</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      display: flex;justify-content: center;align-items: center;min-height: 100vh;margin: 0;padding: 10px;}
+    form {background: white;padding: 25px;border-radius: 15px;box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      max-width: 480px;width: 100%;animation: fadeIn 0.5s ease-in-out;text-align: center;}
+    .logo {max-width: 120px;width: 40%;height: auto;display: block;margin: 0 auto 10px auto;}
+    h1 {color: #004d40;font-size: 20px;margin-bottom: 10px;}
+    h2 {color: #00695c;margin-bottom: 20px;}
+    label {text-align: left;font-weight: 600;display: block;margin-top: 10px;color: #37474f;}
+    input, select, textarea {width: 100%;padding: 10px;margin-top: 6px;border: 1px solid #bbb;border-radius: 8px;
+      transition: 0.2s ease-in-out;box-sizing: border-box;}
+    input:focus, select:focus, textarea:focus {border-color: #26a69a;outline: none;box-shadow: 0 0 4px rgba(38,166,154,0.4);}
+    .radio-group {display: flex;gap: 20px;margin-top: 6px;justify-content: flex-start;}
+    .hidden {display: none;}
+    button {background: #26a69a;color: white;border: none;padding: 12px;margin-top: 20px;width: 100%;
+      border-radius: 8px;font-size: 16px;cursor: pointer;transition: 0.3s ease-in-out;}
+    button:hover {background: #00897b;}
+    .error {color: red;font-size: 14px;display: none;margin-top: 5px;}
+    @keyframes fadeIn {from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);}}
+  </style>
+</head>
+<body>
+  <form id="bookingForm">
+    <img src="logo.jpg" alt="โลโก้สโมสรนิสิต" class="logo">
+    <h1>งานอาคารสถานที่ สโมสรนิสิตวิทยาลัยการเมืองการปกครอง</h1>
+    <h2><i class="fa-solid fa-door-open"></i> ฟอร์มจองห้อง</h2>
+
+    <label>เลือกห้องเรียน</label>
+    <select name="classroom" id="classroom" required>
+      <option value="">-- เลือกห้อง --</option>
+      <option value="D-201" data-capacity="225">D-201 ขนาดความจุ 225 ที่นั่ง</option>
+      <option value="D-202" data-capacity="120">D-202 ขนาดความจุ 120 ที่นั่ง</option>
+      <option value="D-206" data-capacity="154">D-206 ขนาดความจุ 154 ที่นั่ง</option>
+      <option value="D-207" data-capacity="70">D-207 ขนาดความจุ 70 ที่นั่ง</option>
+      <option value="D-211" data-capacity="50">D-211 ขนาดความจุ 50 ที่นั่ง</option>
+      <option value="D-212" data-capacity="50">D-212 ขนาดความจุ 50 ที่นั่ง</option>
+      <option value="D-214" data-capacity="70">D-214 ขนาดความจุ 70 ที่นั่ง</option>
+      <option value="D-218" data-capacity="90">D-218 ขนาดความจุ 90 ที่นั่ง</option>
+      <option value="D-219" data-capacity="154">D-219 ขนาดความจุ 154 ที่นั่ง</option>
+      <option value="D-333" data-capacity="154">D-333 ขนาดความจุ 154 ที่นั่ง</option>
+      <option value="D-334" data-capacity="154">D-334 ขนาดความจุ 154 ที่นั่ง</option>
+      <option value="D-339" data-capacity="20">D-339 ขนาดความจุ 20 ที่นั่ง</option>
+      <option value="D-340" data-capacity="20">D-340 ขนาดความจุ 20 ที่นั่ง</option>
+      <option value="D-402" data-capacity="322">D-402 ขนาดความจุ 322 ที่นั่ง</option>
+      <option value="D-411" data-capacity="322">D-411 ขนาดความจุ 322 ที่นั่ง</option>
+      <option value="D-412" data-capacity="50">D-412 ขนาดความจุ 50 ที่นั่ง</option>
+      <option value="D-414" data-capacity="20">D-414 ขนาดความจุ 20 ที่นั่ง</option>
+      <option value="D-415" data-capacity="390">D-415 ขนาดความจุ 390 ที่นั่ง</option>
+    </select>
+
+    <label>วันที่</label>
+    <input type="date" name="start_date" required>
+    <input type="time" name="start_time" required>
+    <input type="time" name="end_time" required>
+
+    <label>เพื่อใช้สำหรับ</label>
+    <input type="text" name="purpose" required>
+
+    <label>ต้องการเจ้าหน้าที่โสต</label>
+    <div class="radio-group">
+      <label><input type="radio" name="av" value="ต้องการ" required> ต้องการ</label>
+      <label><input type="radio" name="av" value="ไม่ต้องการ"> ไม่ต้องการ</label>
+    </div>
+
+    <label>ต้องการไมค์ลอย</label>
+    <div class="radio-group">
+      <label><input type="radio" name="mic" value="ต้องการ" required> ต้องการ</label>
+      <label><input type="radio" name="mic" value="ไม่ต้องการ"> ไม่ต้องการ</label>
+    </div>
+    <div id="micCountDiv" class="hidden">
+      <label>จำนวนไมค์</label>
+      <input type="number" name="mic_count" min="1">
+    </div>
+
+    <label>จำนวนผู้เข้าร่วม</label>
+    <input type="number" name="participants" id="participants" min="1" required>
+    <div id="capacityError" class="error">เกินความจุห้อง</div>
+
+    <label>ผู้ขอใช้</label>
+    <input type="text" name="requester" required>
+    <label>ตำแหน่ง</label>
+    <input type="text" name="position" required>
+    <label>คณะ/หน่วยงาน</label>
+    <input type="text" name="faculty" required>
+    <label>เบอร์ติดต่อ</label>
+    <input type="tel" name="contact" required>
+    <label>ผู้ควบคุม</label>
+    <input type="text" name="controller" required>
+    <label>คำขอเพิ่มเติม</label>
+    <textarea name="additional"></textarea>
+
+    <button type="submit">ยืนยันการจอง</button>
+  </form>
+
+  <script>
+    const micRadios = document.querySelectorAll('input[name="mic"]');
+    const micCountDiv = document.getElementById('micCountDiv');
+    micRadios.forEach(r => r.addEventListener('change', () => {
+      micCountDiv.classList.toggle('hidden', r.value === 'ไม่ต้องการ');
+    }));
+
+    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+
+      const classroomSelect = document.getElementById("classroom");
+      const selectedOption = classroomSelect.options[classroomSelect.selectedIndex];
+      data.classroom = selectedOption.value;
+      data.capacity = selectedOption.dataset.capacity;
+
+      sessionStorage.setItem('bookingData', JSON.stringify(data));
+      try {
+        await fetch("https://script.google.com/macros/s/AKfycbxdt7627aAzZnoXrX3qPckmuDKy6qbzrJ_SHTanvBGEeqNRLRePtfPckSS6v8N7dcga/exec", {
+          method: "POST",
+          body: JSON.stringify(data)
+        });
+      } catch (err) { console.error("ส่งข้อมูลไม่สำเร็จ:", err); }
+      window.location.href = "success.html";
+    });
+  </script>
+</body>
+</html>
